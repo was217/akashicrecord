@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Akashic Records — Karmic Soul Profile</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500&display=swap');
+:root{--gold:#C9A96E;--gold-light:#E8D5A8;--deep:#1A1410;--parchment:#F5EDD8;--parchment2:#EDE0C4;--muted:#8B7355;--border:rgba(201,169,110,0.25)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--deep);min-height:100vh;font-family:'Cormorant Garamond',serif;color:var(--parchment)}
+#app{max-width:720px;margin:0 auto;position:relative;min-height:100vh}
+.stars-bg{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;width:2px;height:2px;background:var(--gold-light);border-radius:50%;opacity:0;animation:twinkle var(--dur,3s) ease-in-out infinite;animation-delay:var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:0}50%{opacity:var(--op,.5)}}
+.content{position:relative;z-index:1;padding:2rem 1.5rem}
+.app-header{text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:.5px solid var(--border);position:relative}
+.lang-toggle{position:absolute;top:0;right:0;display:flex;gap:4px}
+.lang-btn{background:transparent;border:.5px solid rgba(201,169,110,.3);color:var(--muted);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.05em;padding:4px 9px;border-radius:3px;cursor:pointer;transition:all .2s}
+.lang-btn:hover{border-color:var(--gold);color:var(--gold)}
+.lang-btn.active{background:rgba(201,169,110,.15);border-color:var(--gold);color:var(--gold)}
+.api-saved{display:flex;align-items:center;justify-content:space-between;background:rgba(201,169,110,.08);border:.5px solid rgba(201,169,110,.3);border-radius:4px;padding:9px 13px;font-size:13px;color:var(--gold-light)}
+.api-change-btn{background:transparent;border:.5px solid rgba(201,169,110,.4);color:var(--muted);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.05em;padding:5px 12px;border-radius:3px;cursor:pointer;transition:all .2s}
+.api-change-btn:hover{border-color:var(--gold);color:var(--gold)}
+.app-title{font-family:'Cinzel',serif;font-size:24px;font-weight:500;color:var(--gold);letter-spacing:.14em;margin-bottom:4px}
+.app-subtitle{font-size:14px;color:var(--muted);font-style:italic}
+.orn{display:flex;align-items:center;justify-content:center;gap:12px;margin:8px 0}
+.orn-line{flex:1;height:.5px;background:rgba(201,169,110,.3);max-width:80px}
+.orn-gem{color:var(--gold);font-size:11px}
+.form-section{display:flex;flex-direction:column;gap:.9rem}
+.field-group{display:flex;flex-direction:column;gap:5px}
+.field-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
+.field-hint{font-size:11px;color:var(--muted);font-style:italic;margin-top:1px}
+.field-hint a{color:var(--gold)}
+.field-input{background:rgba(245,237,216,.08);border:.5px solid rgba(201,169,110,.35);border-radius:4px;padding:9px 13px;color:#F5EDD8;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;transition:border-color .2s;width:100%}
+.field-input:focus{border-color:rgba(201,169,110,.8)}
+.field-input::placeholder{color:rgba(245,237,216,.32)}
+.fields-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.time-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sel-wrap{position:relative}
+.sel-wrap select{width:100%;padding:9px 26px 9px 12px;background:#2C2010;border:.5px solid rgba(201,169,110,.35);border-radius:4px;color:#F5EDD8;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;appearance:none;cursor:pointer}
+.sel-wrap select:focus{border-color:rgba(201,169,110,.8)}
+.sel-wrap select option{background:#2C2010;color:#F5EDD8}
+.sel-arrow{position:absolute;right:9px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:9px;pointer-events:none}
+.btn-reveal{margin-top:.5rem;background:transparent;border:.5px solid var(--gold);border-radius:4px;padding:13px 24px;color:var(--gold);font-family:'Cinzel',serif;font-size:12px;letter-spacing:.14em;cursor:pointer;width:100%;transition:all .3s}
+.btn-reveal:hover{background:rgba(201,169,110,.1)}
+.btn-reveal:disabled{opacity:.5;cursor:not-allowed}
+.loading-state{text-align:center;padding:3rem 1rem;display:none}
+.loading-orb{width:56px;height:56px;border-radius:50%;border:1px solid rgba(201,169,110,.3);border-top-color:var(--gold);animation:spin 1.5s linear infinite;margin:0 auto 1.5rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-style:italic;color:var(--muted);font-size:15px;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.chart-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.5rem}
+.chart-cell{background:rgba(245,237,216,.04);border:.5px solid rgba(201,169,110,.18);border-radius:5px;padding:8px 10px;text-align:center}
+.chart-cell-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.chart-cell-sign{font-size:14px;color:var(--gold);margin-bottom:1px}
+.chart-cell-sub{font-size:10px;color:var(--parchment2)}
+.chart-cell.hl{border-color:rgba(201,169,110,.5);background:rgba(201,169,110,.07)}
+.result-section{display:none}
+.result-header{text-align:center;margin-bottom:1.8rem;padding-bottom:1.4rem;border-bottom:.5px solid rgba(201,169,110,.2)}
+.result-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:5px;text-transform:uppercase}
+.soul-mission{font-size:18px;font-style:italic;color:var(--parchment);line-height:1.5;max-width:500px;margin:0 auto}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.4rem}
+.mini-card{border-radius:6px;padding:1rem;text-align:center;border:.5px solid rgba(201,169,110,.2)}
+.micro-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:7px}
+.color-dot{width:34px;height:34px;border-radius:50%;margin:0 auto 7px;border:1px solid rgba(255,255,255,.12)}
+.mini-val{font-size:15px;color:var(--parchment);margin-bottom:2px}
+.mini-sub{font-size:11px;color:var(--muted);font-style:italic}
+.el-sym{font-size:26px;margin-bottom:3px;line-height:1}
+.age-bar{background:rgba(245,237,216,.04);border:.5px solid rgba(201,169,110,.2);border-radius:6px;padding:1rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:1rem}
+.age-col{flex:0 0 auto}
+.age-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.age-val{font-size:16px;color:var(--gold)}
+.age-track{flex:1;height:4px;background:rgba(245,237,216,.1);border-radius:2px;overflow:hidden}
+.age-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 1.2s ease;width:0%}
+.age-desc{font-size:11px;color:var(--muted);font-style:italic;margin-top:4px}
+.profile-cards{display:flex;flex-direction:column;gap:.9rem;margin-bottom:1.4rem}
+.pcard{background:rgba(245,237,216,.03);border:.5px solid rgba(201,169,110,.18);border-radius:6px;padding:1.1rem}
+.pcard-hdr{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.pcard-icon{color:var(--gold);font-size:15px}
+.pcard-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;color:var(--gold);text-transform:uppercase}
+.pcard-body{font-size:14px;color:var(--parchment);line-height:1.75}
+.origin-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(201,169,110,.1);border:.5px solid rgba(201,169,110,.3);border-radius:20px;padding:4px 12px;margin-top:9px;flex-wrap:wrap}
+.origin-flag{font-size:17px;line-height:1}
+.origin-country{font-size:12px;color:var(--gold-light)}
+.origin-era{font-size:11px;color:var(--muted);font-style:italic}
+.achieve{background:rgba(201,169,110,.05);border:.5px solid rgba(201,169,110,.22);border-radius:6px;padding:1.3rem;margin-bottom:1.4rem}
+.achieve-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:.9rem;text-align:center}
+.achieve-steps{display:flex;flex-direction:column;gap:8px}
+.astep{display:flex;align-items:flex-start;gap:9px}
+.astep-num{flex:0 0 auto;width:19px;height:19px;border-radius:50%;border:.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:9px;color:var(--gold);margin-top:2px}
+.astep-text{font-size:13px;color:var(--parchment2);line-height:1.65}
+.astep-text strong{color:var(--parchment);font-weight:600}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.btn-pdf,.btn-reset{background:transparent;border-radius:4px;padding:11px 16px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-pdf{border:.5px solid var(--gold);color:var(--gold)}
+.btn-pdf:hover{background:rgba(201,169,110,.1)}
+.btn-pdf:disabled{opacity:.4;cursor:not-allowed}
+.btn-reset{border:.5px solid rgba(201,169,110,.25);color:var(--muted)}
+.btn-reset:hover{border-color:var(--gold);color:var(--gold)}
+.err-msg{background:rgba(138,74,58,.2);border:.5px solid rgba(138,74,58,.5);border-radius:4px;padding:10px 13px;color:#E8A88A;font-size:13px;margin-top:.4rem;display:none;text-align:center}
+.fade-in{animation:fadeIn .6s ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="stars-bg" id="starsBg"></div>
+  <div class="content">
+    <div class="app-header">
+      <div class="lang-toggle">
+        <button id="langEN" class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button id="langRU" class="lang-btn" onclick="setLang('ru')">RU</button>
+      </div>
+      <div class="app-title" id="appTitle">Akashic Records</div>
+      <div class="orn"><div class="orn-line"></div><div class="orn-gem">✦</div><div class="orn-line"></div></div>
+      <div class="app-subtitle" id="appSubtitle">Swiss Ephemeris natal chart · Vedic karmic reading · Soul mission</div>
+    </div>
+
+    <div id="formSection" class="form-section">
+      <div class="fields-row">
+        <div class="field-group">
+          <label class="field-label" id="lblDob">Date of Birth</label>
+          <input type="date" id="dob" class="field-input"/>
+        </div>
+        <div class="field-group">
+          <label class="field-label" id="lblTime">Time of Birth (24h)</label>
+          <div class="time-grid">
+            <div class="sel-wrap"><select id="tHour"><option value="">Hour</option></select><span class="sel-arrow">▼</span></div>
+            <div class="sel-wrap"><select id="tMin"><option value="">Min</option></select><span class="sel-arrow">▼</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" id="lblCity">City of Birth</label>
+        <input type="text" id="pob" class="field-input" placeholder="e.g. Lisbon, Moscow, Tokyo, Dubai..."/>
+        <div class="field-hint" id="hintCity">Just type your city — we handle the rest</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" id="lblName">Your Name (optional)</label>
+        <input type="text" id="uname" class="field-input" placeholder="As you wish to be known..."/>
+      </div>
+      <div class="field-group" id="apiKeyGroup">
+        <label class="field-label" id="lblApiKey">Anthropic API Key</label>
+        <input type="password" id="apiKey" class="field-input" placeholder="sk-ant-..." oninput="onApiKeyInput()"/>
+        <div class="field-hint" id="hintApiKey">Never stored. Get yours at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></div>
+      </div>
+      <div class="api-saved" id="apiSavedRow" style="display:none">
+        <span id="apiSavedText">✓ API key saved for this session</span>
+        <button class="api-change-btn" id="apiChangeBtn" onclick="changeApiKey()">Change</button>
+      </div>
+      <button class="btn-reveal" id="btnReveal" onclick="revealProfile()">✦ &nbsp; Reveal My Karmic Profile &nbsp; ✦</button>
+      <div class="err-msg" id="errMsg"></div>
+    </div>
+
+    <div class="loading-state" id="loadingSection">
+      <div class="loading-orb"></div>
+      <div class="loading-text" id="loadingText">Loading the Swiss Ephemeris engine...</div>
+    </div>
+    <div class="result-section" id="resultSection"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════
+// INTERNATIONALIZATION (EN / RU)
+// ═══════════════════════════════════════════════════════
+let currentLang='en';
+
+const I18N={
+  en:{
+    title:'Akashic Records',
+    subtitle:'Swiss Ephemeris natal chart · Vedic karmic reading · Soul mission',
+    lblDob:'Date of Birth',
+    lblTime:'Time of Birth (24h)',
+    hour:'Hour', min:'Min',
+    lblCity:'City of Birth',
+    hintCity:'Just type your city — we handle the rest',
+    cityPlaceholder:'e.g. Lisbon, Moscow, Tokyo, Dubai...',
+    lblName:'Your Name (optional)',
+    namePlaceholder:'As you wish to be known...',
+    lblApiKey:'Anthropic API Key',
+    hintApiKey:'Never stored. Get yours at ',
+    apiSaved:'✓ API key saved for this session',
+    apiChange:'Change',
+    reveal:'✦ \u00A0 Reveal My Karmic Profile \u00A0 ✦',
+    errApiKey:'Please enter a valid Anthropic API key.',
+    errDob:'Please enter your date of birth.',
+    errCity:'Please enter your city of birth.',
+    errSwiss:'Could not load the Swiss Ephemeris astronomy engine (needs internet). ',
+    errCosmic:'The cosmic connection was disrupted. Please try again. ',
+    soulAge:'Soul Age', soulColour:'Soul Colour', dominantElement:'Dominant Element',
+    natalChart:'✦ \u00A0 Natal Chart Placements \u00A0 ✦',
+    rising:'Rising', past:'Past', future:'Future',
+    dominantPlanetary:'Dominant Planetary Influence',
+    pastLifeTitle:'Past Life — Archetype & Occupation',
+    karmicWounds:'Karmic Wounds (Ketu + Saturn)',
+    moonKarma:'Moon Karma — Emotional Inheritance',
+    unfinished:'Unfinished Assignment',
+    saturnLesson:'Saturn Lesson — Karmic Discipline',
+    evolution:"This Life's Evolution",
+    howTo:'✦ \u00A0 How to Fulfil Your Soul Mission \u00A0 ✦',
+    downloadPdf:'⬇ Download PDF', readAnother:'↺ Read Another Soul',
+    generating:'Generating...',
+    phrases:["Loading the Swiss Ephemeris engine...","Calculating exact planetary positions...","Reading your natal chart...","Tracing your soul across lifetimes...","Interpreting karmic imprints...","Decoding your celestial blueprint...","Unveiling threads of your past lives..."],
+    labels:{Sun:'Sun',Moon:'Moon',Ascendant:'Ascendant',Mercury:'Mercury',Venus:'Venus',Mars:'Mars',Jupiter:'Jupiter',Saturn:'Saturn',Uranus:'Uranus',Neptune:'Neptune',Ketu:'Ketu',Rahu:'Rahu'},
+    seeker:'Seeker', pdfFooter:'Generated by Akashic Records · Swiss Ephemeris Natal Chart · Vedic Astrology & Numerology',
+    timeNote:'⚠ No birth time given — noon was used. House positions (and the Ascendant) need the exact birth time to be accurate. Signs and the karmic axis remain reliable.',
+    aiLang:'English',
+    pdf:{title:'Karmic Soul Profile', soulColour:'SOUL COLOUR', element:'DOMINANT ELEMENT', soulAge:'SOUL AGE', natal:'NATAL CHART PLACEMENTS', dominant:'DOMINANT PLANETARY INFLUENCE', pastLife:'PAST LIFE — ARCHETYPE & OCCUPATION', wounds:'KARMIC WOUNDS', moon:'MOON KARMA', unfinished:'UNFINISHED KARMIC ASSIGNMENT', saturn:'SATURN LESSON', evolution:"THIS LIFE'S EVOLUTION (RAHU)", howTo:'HOW TO FULFIL YOUR SOUL MISSION', origin:'Origin'}
+  },
+  ru:{
+    title:'Хроники Акаши',
+    subtitle:'Натальная карта Swiss Ephemeris · Ведическое кармическое чтение · Миссия души',
+    lblDob:'Дата рождения',
+    lblTime:'Время рождения (24ч)',
+    hour:'Час', min:'Мин',
+    lblCity:'Город рождения',
+    hintCity:'Просто введите ваш город — остальное мы сделаем сами',
+    cityPlaceholder:'напр. Минск, Москва, Солигорск, Киев...',
+    lblName:'Ваше имя (необязательно)',
+    namePlaceholder:'Как к вам обращаться...',
+    lblApiKey:'API-ключ Anthropic',
+    hintApiKey:'Не сохраняется. Получите ключ на ',
+    apiSaved:'✓ API-ключ сохранён на эту сессию',
+    apiChange:'Изменить',
+    reveal:'✦ \u00A0 Раскрыть мой кармический профиль \u00A0 ✦',
+    errApiKey:'Пожалуйста, введите действительный API-ключ Anthropic.',
+    errDob:'Пожалуйста, укажите дату рождения.',
+    errCity:'Пожалуйста, укажите город рождения.',
+    errSwiss:'Не удалось загрузить астрономический движок Swiss Ephemeris (нужен интернет). ',
+    errCosmic:'Космическая связь прервалась. Пожалуйста, попробуйте снова. ',
+    soulAge:'Возраст души', soulColour:'Цвет души', dominantElement:'Доминирующая стихия',
+    natalChart:'✦ \u00A0 Положения натальной карты \u00A0 ✦',
+    rising:'Асцендент', past:'Прошлое', future:'Будущее',
+    dominantPlanetary:'Доминирующее планетарное влияние',
+    pastLifeTitle:'Прошлая жизнь — Архетип и занятие',
+    karmicWounds:'Кармические раны (Кету + Сатурн)',
+    moonKarma:'Карма Луны — Эмоциональное наследие',
+    unfinished:'Незавершённая задача',
+    saturnLesson:'Урок Сатурна — Кармическая дисциплина',
+    evolution:'Эволюция этой жизни',
+    howTo:'✦ \u00A0 Как исполнить миссию вашей души \u00A0 ✦',
+    downloadPdf:'⬇ Скачать PDF', readAnother:'↺ Новое чтение',
+    generating:'Создание...',
+    phrases:["Загрузка движка Swiss Ephemeris...","Расчёт точных положений планет...","Чтение вашей натальной карты...","Прослеживание души сквозь жизни...","Толкование кармических отпечатков...","Расшифровка небесного плана...","Раскрытие нитей ваших прошлых жизней..."],
+    labels:{Sun:'Солнце',Moon:'Луна',Ascendant:'Асцендент',Mercury:'Меркурий',Venus:'Венера',Mars:'Марс',Jupiter:'Юпитер',Saturn:'Сатурн',Uranus:'Уран',Neptune:'Нептун',Ketu:'Кету',Rahu:'Раху'},
+    seeker:'Искатель', pdfFooter:'Создано Хрониками Акаши · Натальная карта Swiss Ephemeris · Ведическая астрология и нумерология',
+    timeNote:'⚠ Время рождения не указано — использован полдень. Положения домов (и Асцендент) требуют точного времени рождения. Знаки и кармическая ось узлов остаются точными.',
+    aiLang:'Russian (русский язык)',
+    pdf:{title:'Кармический профиль души', soulColour:'ЦВЕТ ДУШИ', element:'ДОМИНИРУЮЩАЯ СТИХИЯ', soulAge:'ВОЗРАСТ ДУШИ', natal:'ПОЛОЖЕНИЯ НАТАЛЬНОЙ КАРТЫ', dominant:'ДОМИНИРУЮЩЕЕ ПЛАНЕТАРНОЕ ВЛИЯНИЕ', pastLife:'ПРОШЛАЯ ЖИЗНЬ — АРХЕТИП И ЗАНЯТИЕ', wounds:'КАРМИЧЕСКИЕ РАНЫ', moon:'КАРМА ЛУНЫ', unfinished:'НЕЗАВЕРШЁННАЯ КАРМИЧЕСКАЯ ЗАДАЧА', saturn:'УРОК САТУРНА', evolution:'ЭВОЛЮЦИЯ ЭТОЙ ЖИЗНИ (РАХУ)', howTo:'КАК ИСПОЛНИТЬ МИССИЮ ВАШЕЙ ДУШИ', origin:'Происхождение'}
+  }
+};
+
+function t(key){ return (I18N[currentLang]&&I18N[currentLang][key])||I18N.en[key]||key; }
+
+function setLang(lang){
+  currentLang=lang;
+  document.getElementById('langEN').classList.toggle('active',lang==='en');
+  document.getElementById('langRU').classList.toggle('active',lang==='ru');
+  applyLang();
+}
+
+function applyLang(){
+  document.documentElement.lang=currentLang;
+  const set=(id,txt)=>{const el=document.getElementById(id);if(el)el.textContent=txt;};
+  set('appTitle',t('title'));
+  set('appSubtitle',t('subtitle'));
+  set('lblDob',t('lblDob'));
+  set('lblTime',t('lblTime'));
+  set('lblCity',t('lblCity'));
+  set('hintCity',t('hintCity'));
+  set('lblName',t('lblName'));
+  set('lblApiKey',t('lblApiKey'));
+  set('apiSavedText',t('apiSaved'));
+  set('apiChangeBtn',t('apiChange'));
+  set('btnReveal',t('reveal'));
+  // hint with link
+  const hintApi=document.getElementById('hintApiKey');
+  if(hintApi) hintApi.innerHTML=t('hintApiKey')+'<a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>';
+  // placeholders
+  const pob=document.getElementById('pob'); if(pob) pob.placeholder=t('cityPlaceholder');
+  const uname=document.getElementById('uname'); if(uname) uname.placeholder=t('namePlaceholder');
+  // hour/min first option
+  const th=document.getElementById('tHour'); if(th&&th.options[0]) th.options[0].textContent=t('hour');
+  const tm=document.getElementById('tMin'); if(tm&&tm.options[0]) tm.options[0].textContent=t('min');
+}
+
+// ── API key hide/show ──
+function onApiKeyInput(){
+  const v=document.getElementById('apiKey').value.trim();
+  // Real Anthropic keys are ~100+ chars; only hide once a full-length key is present (i.e. pasted)
+  if(v.startsWith('sk-')&&v.length>=60){
+    document.getElementById('apiKeyGroup').style.display='none';
+    document.getElementById('apiSavedRow').style.display='flex';
+  }
+}
+function changeApiKey(){
+  document.getElementById('apiKeyGroup').style.display='flex';
+  document.getElementById('apiSavedRow').style.display='none';
+}
+
+// ═══════════════════════════════════════════════════════
+// ASTROLOGY ENGINE — Swiss Ephemeris
+// ═══════════════════════════════════════════════════════
+
+const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const SIGNS_RU = ['Овен','Телец','Близнецы','Рак','Лев','Дева','Весы','Скорпион','Стрелец','Козерог','Водолей','Рыбы'];
+const SIGN_SYM = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+
+function signName(index){ return currentLang==='ru'?SIGNS_RU[index]:SIGNS[index]; }
+
+function norm(d){ return ((d%360)+360)%360; }
+function toRad(d){ return d*Math.PI/180; }
+function toDeg(r){ return r*180/Math.PI; }
+
+function signOf(deg){
+  const d=norm(deg);
+  const i=Math.floor(d/30);
+  return{index:i,name:SIGNS[i],nameLoc:signName(i),sym:SIGN_SYM[i],degInSign:d%30};
+}
+
+// ═══════════════════════════════════════════════════════
+// SWISS EPHEMERIS WASM — genuine professional-grade engine
+// Compiled Swiss Ephemeris C code. Bit-level accurate.
+// Source: github.com/prolaxu/swisseph-wasm
+// ═══════════════════════════════════════════════════════
+let sweInstance=null;
+let sweReady=false;
+
+async function initSwiss(){
+  if(sweReady) return true;
+  const mod=await import('https://cdn.jsdelivr.net/gh/prolaxu/swisseph-wasm@main/src/swisseph.js');
+  const SwissEph=mod.default;
+  sweInstance=new SwissEph();
+  await sweInstance.initSwissEph();
+  sweReady=true;
+  return true;
+}
+
+function getHouse(deg,cusps){
+  for(let i=0;i<12;i++){
+    let a=norm(cusps[i]);
+    let b=norm(cusps[(i+1)%12]);
+    if(b<a) b+=360;
+    let d=norm(deg);
+    if(d<a) d+=360;
+    if(d>=a&&d<b) return i+1;
+  }
+  return 1;
+}
+
+
+// ── City database ──
+const CITIES={
+  'lisbon':{lat:38.72,lon:-9.14,tz:0},'porto':{lat:41.15,lon:-8.61,tz:0},
+  'almada':{lat:38.68,lon:-9.16,tz:0},
+  'moscow':{lat:55.75,lon:37.62,tz:3},'saint petersburg':{lat:59.95,lon:30.32,tz:3},
+  'st petersburg':{lat:59.95,lon:30.32,tz:3},'kyiv':{lat:50.45,lon:30.52,tz:2},
+  'kiev':{lat:50.45,lon:30.52,tz:2},'minsk':{lat:53.90,lon:27.57,tz:3},
+  'soligorsk':{lat:52.78,lon:27.53,tz:3},'gomel':{lat:52.43,lon:31.00,tz:3},
+  'brest':{lat:52.10,lon:23.73,tz:3},'grodno':{lat:53.68,lon:23.83,tz:3},
+  'vitebsk':{lat:55.19,lon:30.20,tz:3},'mogilev':{lat:53.90,lon:30.33,tz:3},
+  'almaty':{lat:43.26,lon:76.95,tz:6},'tashkent':{lat:41.30,lon:69.24,tz:5},
+  'dubai':{lat:25.20,lon:55.27,tz:4},'abu dhabi':{lat:24.47,lon:54.37,tz:4},
+  'riyadh':{lat:24.69,lon:46.72,tz:3},'istanbul':{lat:41.01,lon:28.95,tz:3},
+  'tehran':{lat:35.69,lon:51.39,tz:3.5},'cairo':{lat:30.04,lon:31.24,tz:2},
+  'tokyo':{lat:35.68,lon:139.69,tz:9},'beijing':{lat:39.91,lon:116.39,tz:8},
+  'shanghai':{lat:31.23,lon:121.47,tz:8},'mumbai':{lat:19.08,lon:72.88,tz:5.5},
+  'delhi':{lat:28.61,lon:77.21,tz:5.5},'new delhi':{lat:28.61,lon:77.21,tz:5.5},
+  'bangalore':{lat:12.97,lon:77.59,tz:5.5},'kolkata':{lat:22.57,lon:88.36,tz:5.5},
+  'karachi':{lat:24.86,lon:67.01,tz:5},'lahore':{lat:31.55,lon:74.34,tz:5},
+  'seoul':{lat:37.57,lon:126.98,tz:9},'bangkok':{lat:13.75,lon:100.52,tz:7},
+  'singapore':{lat:1.35,lon:103.82,tz:8},'jakarta':{lat:-6.21,lon:106.85,tz:7},
+  'hong kong':{lat:22.32,lon:114.17,tz:8},
+  'london':{lat:51.51,lon:-0.13,tz:0},'paris':{lat:48.85,lon:2.35,tz:1},
+  'berlin':{lat:52.52,lon:13.40,tz:1},'madrid':{lat:40.42,lon:-3.70,tz:1},
+  'rome':{lat:41.90,lon:12.50,tz:1},'amsterdam':{lat:52.37,lon:4.90,tz:1},
+  'vienna':{lat:48.21,lon:16.37,tz:1},'warsaw':{lat:52.23,lon:21.01,tz:1},
+  'prague':{lat:50.08,lon:14.44,tz:1},'budapest':{lat:47.50,lon:19.04,tz:1},
+  'bucharest':{lat:44.43,lon:26.10,tz:2},'athens':{lat:37.98,lon:23.73,tz:2},
+  'stockholm':{lat:59.33,lon:18.07,tz:1},'oslo':{lat:59.91,lon:10.75,tz:1},
+  'copenhagen':{lat:55.68,lon:12.57,tz:1},'milan':{lat:45.47,lon:9.19,tz:1},
+  'barcelona':{lat:41.39,lon:2.15,tz:1},'brussels':{lat:50.85,lon:4.35,tz:1},
+  'new york':{lat:40.71,lon:-74.01,tz:-5},'los angeles':{lat:34.05,lon:-118.24,tz:-8},
+  'chicago':{lat:41.88,lon:-87.63,tz:-6},'toronto':{lat:43.65,lon:-79.38,tz:-5},
+  'miami':{lat:25.77,lon:-80.19,tz:-5},'mexico city':{lat:19.43,lon:-99.13,tz:-6},
+  'sao paulo':{lat:-23.55,lon:-46.63,tz:-3},'buenos aires':{lat:-34.61,lon:-58.38,tz:-3},
+  'sydney':{lat:-33.87,lon:151.21,tz:10},'melbourne':{lat:-37.81,lon:144.96,tz:10},
+  'lagos':{lat:6.52,lon:3.38,tz:1},'nairobi':{lat:-1.29,lon:36.82,tz:3},
+  'johannesburg':{lat:-26.20,lon:28.04,tz:2},'cape town':{lat:-33.93,lon:18.42,tz:2},
+};
+
+// ── Geocoding via Open-Meteo (free, no key) + DST-aware timezone ──
+async function geocodeCity(city){
+  // 1. Try local database first (instant, offline)
+  const k=city.toLowerCase().trim();
+  let local=null;
+  if(CITIES[k]) local={...CITIES[k]};
+  else for(const[ck,cv] of Object.entries(CITIES)){ if(k.includes(ck)||ck.includes(k)){local={...cv};break;} }
+
+  // 2. Always try the geocoding API to get precise coords + IANA timezone
+  try{
+    const q=encodeURIComponent(city.split(',')[0].trim());
+    const resp=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${q}&count=1&language=en&format=json`);
+    if(resp.ok){
+      const data=await resp.json();
+      if(data.results&&data.results.length){
+        const r=data.results[0];
+        return{
+          lat:r.latitude, lon:r.longitude,
+          tzName:r.timezone,           // IANA zone e.g. "Europe/Lisbon"
+          resolved:`${r.name}${r.country?', '+r.country:''}`,
+          found:true
+        };
+      }
+    }
+  }catch(e){ /* fall through to local */ }
+
+  // 3. Fallback to local DB (fixed offset, no DST) if API unreachable
+  if(local) return{lat:local.lat,lon:local.lon,tzOffset:local.tz,found:true};
+  // 4. Nothing found
+  return{found:false};
+}
+
+// Compute the UTC offset (hours) for a given IANA timezone at a specific local date/time,
+// correctly accounting for historical DST.
+function tzOffsetForDate(tzName, y, mo, d, hour, min){
+  try{
+    // Build a date treated as UTC, then see what that instant looks like in the zone.
+    const utcGuess=new Date(Date.UTC(y, mo-1, d, hour, min));
+    const dtf=new Intl.DateTimeFormat('en-US',{
+      timeZone:tzName, year:'numeric',month:'2-digit',day:'2-digit',
+      hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false
+    });
+    const parts=dtf.formatToParts(utcGuess);
+    const map={};
+    for(const p of parts) map[p.type]=p.value;
+    let h24=parseInt(map.hour); if(h24===24) h24=0;
+    const asUTC=Date.UTC(parseInt(map.year),parseInt(map.month)-1,parseInt(map.day),h24,parseInt(map.minute),parseInt(map.second));
+    // offset = (local-wall-clock interpreted as UTC) - (the UTC instant)
+    return (asUTC-utcGuess.getTime())/3600000;
+  }catch(e){
+    return 0;
+  }
+}
+
+function lifePathNum(dob){
+  let s=dob.replace(/-/g,'').split('').reduce((a,c)=>a+Number(c),0);
+  while(s>9&&s!==11&&s!==22&&s!==33) s=String(s).split('').reduce((a,c)=>a+Number(c),0);
+  return s;
+}
+
+async function buildChart(dob,hour,min,city){
+  await initSwiss();
+  const swe=sweInstance;
+  const[y,mo,d]=dob.split('-').map(Number);
+  const coords=await geocodeCity(city);
+  if(!coords.found) throw new Error(currentLang==='ru'?('Город не найден: '+city):('City not found: '+city));
+
+  const hh=(hour!==null?hour:12);
+  const mm=(min!==null?min:0);
+  // Determine UTC offset with DST awareness
+  let tzOff;
+  if(coords.tzName){ tzOff=tzOffsetForDate(coords.tzName,y,mo,d,hh,mm); }
+  else { tzOff=coords.tzOffset||0; }
+
+  const localH=hh+mm/60;
+  const utcH=localH-tzOff;
+  // Swiss Ephemeris Julian Day (UT)
+  const jd=swe.julday(y,mo,d,utcH);
+  const FLAG=swe.SEFLG_SWIEPH;
+
+  // Planet IDs in Swiss Ephemeris
+  const PIDS={
+    sun:swe.SE_SUN, moon:swe.SE_MOON, mercury:swe.SE_MERCURY,
+    venus:swe.SE_VENUS, mars:swe.SE_MARS, jupiter:swe.SE_JUPITER,
+    saturn:swe.SE_SATURN, uranus:swe.SE_URANUS, neptune:swe.SE_NEPTUNE,
+    pluto:swe.SE_PLUTO
+  };
+
+  const planetDeg={};
+  for(const[name,pid] of Object.entries(PIDS)){
+    const r=swe.calc_ut(jd,pid,FLAG);
+    planetDeg[name]=norm(r[0]);
+  }
+  // True lunar node (Rahu); Ketu opposite
+  const nodeRes=swe.calc_ut(jd,swe.SE_TRUE_NODE,FLAG);
+  planetDeg.rahu=norm(nodeRes[0]);
+  planetDeg.ketu=norm(nodeRes[0]+180);
+
+  // Houses — Placidus ('P'). Returns {cusps:[0,h1..h12], ascmc:[asc,mc,...]}
+  const h=swe.houses(jd,coords.lat,coords.lon,'P');
+  const cuspsRaw=h.cusps||h.house||h.houses;
+  // Swiss Ephemeris cusps are 1-indexed: cusp[1..12]. The JS array has a leading
+  // element at index 0 (unused), so houses 1-12 are at indices 1-12.
+  let cusps;
+  if(cuspsRaw.length>=13){ cusps=cuspsRaw.slice(1,13).map(norm); }
+  else { cusps=cuspsRaw.slice(0,12).map(norm); }
+  const ascmc=h.ascmc;
+  const asc=norm(ascmc[0]);
+  const mc=norm(ascmc[1]);
+
+  const lpn=lifePathNum(dob);
+
+  const pl={};
+  for(const[name,deg] of Object.entries(planetDeg)){
+    pl[name]={...signOf(deg),house:getHouse(deg,cusps),deg};
+  }
+  pl.ascendant={...signOf(asc),house:1,deg:asc};
+  pl.mc={...signOf(mc),house:10,deg:mc};
+
+  return{jd,pl,cusps,asc,mc,lpn,coords};
+}
+
+function chartToText(ch){
+  const p=ch.pl;
+  const f=(n,o)=>`${n}: ${o.name} ${o.degInSign.toFixed(1)}° (House ${o.house})`;
+  return[
+    f('Sun',p.sun),f('Moon',p.moon),f('Mercury',p.mercury),f('Venus',p.venus),
+    f('Mars',p.mars),f('Jupiter',p.jupiter),f('Saturn',p.saturn),
+    f('Uranus',p.uranus),f('Neptune',p.neptune),
+    f('Rahu North Node',p.rahu),f('Ketu South Node',p.ketu),
+    f('Ascendant',p.ascendant),f('Midheaven MC',p.mc),
+    `Life Path Number: ${ch.lpn}`
+  ].join('\n');
+}
+
+// ── UI setup ──
+(function(){
+  const h=document.getElementById('tHour');
+  for(let i=0;i<24;i++){const o=document.createElement('option');o.value=String(i).padStart(2,'0');o.textContent=String(i).padStart(2,'0');h.appendChild(o);}
+  const m=document.getElementById('tMin');
+  for(let i=0;i<60;i++){const o=document.createElement('option');o.value=String(i).padStart(2,'0');o.textContent=String(i).padStart(2,'0');m.appendChild(o);}
+})();
+(function(){
+  const bg=document.getElementById('starsBg');
+  for(let i=0;i<70;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--delay:${Math.random()*5}s;--op:${(0.15+Math.random()*0.55).toFixed(2)}`;bg.appendChild(s);}
+})();
+applyLang();
+
+function cyclePhrases(){let i=0;const ph=t('phrases');const el0=document.getElementById('loadingText');if(el0)el0.textContent=ph[0];return setInterval(()=>{const ph2=t('phrases');i=(i+1)%ph2.length;const el=document.getElementById('loadingText');if(el)el.textContent=ph2[i];},2000);}
+
+let currentProfile=null,currentMeta=null,currentChart=null;
+
+async function revealProfile(){
+  const dob=document.getElementById('dob').value;
+  const tHour=document.getElementById('tHour').value;
+  const tMin=document.getElementById('tMin').value;
+  const pob=document.getElementById('pob').value.trim();
+  const uname=document.getElementById('uname').value.trim();
+  const apiKey=document.getElementById('apiKey').value.trim();
+  const err=document.getElementById('errMsg');
+  err.style.display='none';
+  if(!apiKey||!apiKey.startsWith('sk-')){changeApiKey();err.textContent=t('errApiKey');err.style.display='block';return;}
+  if(!dob){err.textContent=t('errDob');err.style.display='block';return;}
+  if(!pob){err.textContent=t('errCity');err.style.display='block';return;}
+  // Sanity-check the date: real birth date, within Swiss Ephemeris reliable range
+  {
+    const yy=parseInt(dob.split('-')[0]);
+    const today=new Date().toISOString().slice(0,10);
+    if(isNaN(yy)||yy<1800||dob>today){
+      err.textContent=(currentLang==='ru'?'Пожалуйста, укажите реальную дату рождения (1800 — сегодня).':'Please enter a real birth date (1800 — today).');
+      err.style.display='block';return;
+    }
+  }
+
+  const hourVal=tHour?parseInt(tHour):null;
+  const minVal=tMin?parseInt(tMin):null;
+  const timeStr=(hourVal!==null&&minVal!==null)?`${String(hourVal).padStart(2,'0')}:${String(minVal).padStart(2,'0')}`:'unknown (noon used)';
+
+  document.getElementById('formSection').style.display='none';
+  document.getElementById('loadingSection').style.display='block';
+  const timer=cyclePhrases();
+
+  // Calculate natal chart with genuine Swiss Ephemeris (loads WASM on first use)
+  let chart;
+  try{
+    chart=await buildChart(dob,hourVal,minVal,pob);
+    currentChart=chart;
+  }catch(e){
+    clearInterval(timer);
+    document.getElementById('loadingSection').style.display='none';
+    document.getElementById('formSection').style.display='flex';
+    document.getElementById('errMsg').textContent=t('errSwiss')+e.message;
+    document.getElementById('errMsg').style.display='block';
+    return;
+  }
+
+  const system=`You are a master Vedic astrologer and karmic reader. You receive an accurate natal chart calculated with Swiss Ephemeris methods. Base EVERY interpretation on the actual planetary placements. Be specific — reference exact signs and houses.
+
+Respond with ONLY raw JSON. No markdown, no backticks, no text outside the JSON.
+
+Structure:
+{
+  "cityResolved": "city, country",
+  "soulAge": "Young Soul"|"Mature Soul"|"Old Soul",
+  "soulAgePercent": 20-95,
+  "soulAgeDescription": "max 20 words based on chart",
+  "color": "color name",
+  "colorHex": "#hex",
+  "colorMeaning": "max 10 words referencing dominant planet",
+  "element": "Fire"|"Earth"|"Water"|"Air",
+  "elementSymbol": "🔥"|"🌍"|"💧"|"🌬️",
+  "elementDescription": "max 15 words based on chart elements",
+  "soulMission": "one sentence max 15 words derived from Rahu placement",
+  "dominantPlanet": "planet name",
+  "dominantPlanetInfluence": "30 words specific to chart",
+  "pastLifeArchetype": "archetype title",
+  "pastLifeOccupation": "specific role — derived from Ketu sign/house",
+  "pastLifeCountry": "USE EXACTLY the country provided in the input as PAST_LIFE_COUNTRY (translate the name into the output language but keep the same country)",
+  "pastLifeCountryFlag": "USE EXACTLY the flag emoji provided as PAST_LIFE_FLAG",
+  "pastLifeEra": "historical era",
+  "pastLifeDescription": "70 words referencing Ketu, 12th house, Saturn specifically",
+  "karmicWounds": "40 words from Ketu+Saturn",
+  "unfinishedAssignment": "40 words from Ketu house/sign",
+  "thisLifeEvolution": "40 words from Rahu house/sign",
+  "moonKarma": "35 words from Moon sign/house",
+  "saturnLesson": "35 words from Saturn sign/house",
+  "howToAchieve": [
+    {"step":"keyword","description":"25 words specific to chart"},
+    {"step":"keyword","description":"25 words specific to chart"},
+    {"step":"keyword","description":"25 words specific to chart"},
+    {"step":"keyword","description":"25 words specific to chart"},
+    {"step":"keyword","description":"25 words specific to chart"}
+  ]
+}
+
+IMPORTANT: Write ALL string values (descriptions, archetypes, missions, meanings, steps, country names, etc.) in ${t('aiLang')}. Keep the JSON keys exactly as shown in English. The element value must remain one of exactly: Fire, Earth, Water, Air (English) and soulAge one of: Young Soul, Mature Soul, Old Soul (English) — but their description fields in ${t('aiLang')}. The colorHex must be a valid hex code. The flag emoji stays as emoji.`;
+
+  // Deterministic past-life country derived from Ketu sign (fixed mapping → same every run/language)
+  const KETU_COUNTRY={
+    Aries:['Mongolia','🇲🇳'], Taurus:['Egypt','🇪🇬'], Gemini:['Greece','🇬🇷'],
+    Cancer:['China','🇨🇳'], Leo:['India','🇮🇳'], Virgo:['Persia (Iran)','🇮🇷'],
+    Libra:['Japan','🇯🇵'], Scorpio:['Egypt','🇪🇬'], Sagittarius:['Tibet','🇨🇳'],
+    Capricorn:['Babylon (Iraq)','🇮🇶'], Aquarius:['Russia','🇷🇺'], Pisces:['Atlantis / India','🇮🇳']
+  };
+  const ketuSign=chart.pl.ketu.name;
+  const plc=KETU_COUNTRY[ketuSign]||['Egypt','🇪🇬'];
+
+  const user=`Name: ${uname||'unnamed soul'}
+Date: ${dob}, Time: ${timeStr}, City: ${pob}
+
+NATAL CHART (Swiss Ephemeris calculated):
+${chartToText(chart)}
+
+Key axis: Ketu in ${chart.pl.ketu.name} House ${chart.pl.ketu.house} / Rahu in ${chart.pl.rahu.name} House ${chart.pl.rahu.house}
+Ascendant: ${chart.pl.ascendant.name}
+Saturn: ${chart.pl.saturn.name} House ${chart.pl.saturn.house}
+Moon: ${chart.pl.moon.name} House ${chart.pl.moon.house}
+Venus: ${chart.pl.venus.name} House ${chart.pl.venus.house}
+
+PAST_LIFE_COUNTRY: ${plc[0]}
+PAST_LIFE_FLAG: ${plc[1]}
+
+Generate full karmic profile. Identify the modern country for the birth city "${pob}" for cityResolved. For pastLifeCountry use EXACTLY ${plc[0]} (you may translate the name into the output language but it must remain the same country) and for pastLifeCountryFlag use EXACTLY ${plc[1]}.`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1800,temperature:0,system,messages:[{role:'user',content:user}]})
+    });
+    clearInterval(timer);
+    document.getElementById('loadingSection').style.display='none';
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error('API '+res.status+': '+(e.error?.message||'unknown'));}
+    const data=await res.json();
+    const raw=data.content.find(b=>b.type==='text')?.text||'';
+    let js=raw.replace(/```json|```/gi,'').trim();
+    const fb=js.indexOf('{'),lb=js.lastIndexOf('}');
+    if(fb===-1||lb===-1)throw new Error('No JSON in response');
+    js=js.slice(fb,lb+1);
+    const profile=JSON.parse(js);
+    // Validate required AI fields so render never crashes on malformed output
+    if(!Array.isArray(profile.howToAchieve)||!profile.soulMission||!profile.pastLifeCountry){
+      throw new Error('Incomplete AI response — please try again');
+    }
+    currentProfile=profile;
+    currentMeta={name:uname,dob,pob:(chart.coords&&chart.coords.resolved)||profile.cityResolved||pob,timeStr};
+    renderProfile(profile,chart);
+  }catch(e){
+    clearInterval(timer);
+    document.getElementById('loadingSection').style.display='none';
+    document.getElementById('formSection').style.display='flex';
+    document.getElementById('errMsg').textContent=t('errCosmic')+'('+e.message+')';
+    document.getElementById('errMsg').style.display='block';
+  }
+}
+
+const ELEMENT_LOC={
+  en:{Fire:'Fire',Earth:'Earth',Water:'Water',Air:'Air'},
+  ru:{Fire:'Огонь',Earth:'Земля',Water:'Вода',Air:'Воздух'}
+};
+function elementLoc(el){ const m=ELEMENT_LOC[currentLang]||ELEMENT_LOC.en; return m[el]||el; }
+
+const SOULAGE_LOC={
+  en:{'Young Soul':'Young Soul','Mature Soul':'Mature Soul','Old Soul':'Old Soul'},
+  ru:{'Young Soul':'Молодая душа','Mature Soul':'Зрелая душа','Old Soul':'Старая душа'}
+};
+function soulAgeLoc(sa){ const m=SOULAGE_LOC[currentLang]||SOULAGE_LOC.en; return m[sa]||sa; }
+
+// Escape user/AI-provided strings before inserting into innerHTML (XSS protection)
+function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function renderProfile(p,chart){
+  const rs=document.getElementById('resultSection');
+  rs.style.display='block';
+  const m=currentMeta;
+  const dn=esc(m.name||t('seeker'));
+  const locale=currentLang==='ru'?'ru-RU':'en-GB';
+  const dobFmt=new Date(m.dob).toLocaleDateString(locale,{day:'numeric',month:'long',year:'numeric'});
+  const tDisp=m.timeStr.startsWith('unknown')?'':` · ${esc(m.timeStr)}`;
+  const pl=chart.pl;
+  const L=t('labels');
+  const pobE=esc(m.pob);
+
+  const cells=[
+    {lbl:L.Sun,sign:pl.sun.nameLoc,sub:`H${pl.sun.house}`,hl:false},
+    {lbl:L.Moon,sign:pl.moon.nameLoc,sub:`H${pl.moon.house}`,hl:false},
+    {lbl:L.Ascendant,sign:pl.ascendant.nameLoc,sub:t('rising'),hl:true},
+    {lbl:L.Mercury,sign:pl.mercury.nameLoc,sub:`H${pl.mercury.house}`,hl:false},
+    {lbl:L.Venus,sign:pl.venus.nameLoc,sub:`H${pl.venus.house}`,hl:false},
+    {lbl:L.Mars,sign:pl.mars.nameLoc,sub:`H${pl.mars.house}`,hl:false},
+    {lbl:L.Jupiter,sign:pl.jupiter.nameLoc,sub:`H${pl.jupiter.house}`,hl:false},
+    {lbl:L.Saturn,sign:pl.saturn.nameLoc,sub:`H${pl.saturn.house}`,hl:false},
+    {lbl:L.Ketu+' ☋',sign:pl.ketu.nameLoc,sub:`H${pl.ketu.house} ${t('past')}`,hl:true},
+    {lbl:L.Rahu+' ☊',sign:pl.rahu.nameLoc,sub:`H${pl.rahu.house} ${t('future')}`,hl:true},
+    {lbl:L.Uranus,sign:pl.uranus.nameLoc,sub:`H${pl.uranus.house}`,hl:false},
+    {lbl:L.Neptune,sign:pl.neptune.nameLoc,sub:`H${pl.neptune.house}`,hl:false},
+  ];
+
+  rs.innerHTML=`
+    <div class="result-header fade-in">
+      <div class="result-name">${dn} · ${dobFmt}${tDisp} · ${pobE}</div>
+      <div class="orn" style="margin:8px 0"><div class="orn-line"></div><div class="orn-gem">✦</div><div class="orn-line"></div></div>
+      <div class="soul-mission">"${esc(p.soulMission)}"</div>
+      ${m.timeStr.startsWith('unknown')?`<div style="margin-top:12px;font-size:11px;color:#C99;font-style:italic;line-height:1.5;max-width:480px;margin-left:auto;margin-right:auto">${t('timeNote')}</div>`:''}
+    </div>
+
+    <div class="age-bar fade-in" style="animation-delay:.08s">
+      <div class="age-col"><div class="age-lbl">${t('soulAge')}</div><div class="age-val">${esc(soulAgeLoc(p.soulAge))}</div></div>
+      <div style="flex:1">
+        <div class="age-track"><div class="age-fill" id="ageFill"></div></div>
+        <div class="age-desc">${esc(p.soulAgeDescription)}</div>
+      </div>
+    </div>
+
+    <div class="two-col fade-in" style="animation-delay:.1s">
+      <div class="mini-card">
+        <div class="micro-lbl">${t('soulColour')}</div>
+        <div class="color-dot" style="background:${esc(p.colorHex)}"></div>
+        <div class="mini-val">${esc(p.color)}</div>
+        <div class="mini-sub">${esc(p.colorMeaning)}</div>
+      </div>
+      <div class="mini-card">
+        <div class="micro-lbl">${t('dominantElement')}</div>
+        <div class="el-sym">${esc(p.elementSymbol)}</div>
+        <div class="mini-val">${elementLoc(p.element)}</div>
+        <div class="mini-sub">${esc(p.elementDescription)}</div>
+      </div>
+    </div>
+
+    <div class="fade-in" style="animation-delay:.12s;margin-bottom:1.4rem">
+      <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:.8rem;text-align:center">${t('natalChart')}</div>
+      <div class="chart-grid">
+        ${cells.map(c=>`<div class="chart-cell${c.hl?' hl':''}"><div class="chart-cell-label">${c.lbl}</div><div class="chart-cell-sign">${c.sign}</div><div class="chart-cell-sub">${c.sub}</div></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="profile-cards fade-in" style="animation-delay:.16s">
+      <div class="pcard">
+        <div class="pcard-hdr"><span class="pcard-icon">☉</span><div class="pcard-title">${t('dominantPlanetary')}</div></div>
+        <div class="pcard-body"><span style="color:var(--gold)">${esc(p.dominantPlanet)}</span> — ${esc(p.dominantPlanetInfluence)}</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><span class="pcard-icon">☋</span><div class="pcard-title">${t('pastLifeTitle')}</div></div>
+        <div class="pcard-body">
+          <span style="color:var(--gold);font-size:15px">${esc(p.pastLifeArchetype)}</span><br>
+          <span style="color:var(--muted);font-size:12px;font-style:italic">${esc(p.pastLifeOccupation)}</span>
+          <div style="margin-top:8px">${esc(p.pastLifeDescription)}</div>
+          <div class="origin-pill"><span class="origin-flag">${esc(p.pastLifeCountryFlag||'')}</span><span class="origin-country">${esc(p.pastLifeCountry)}</span><span class="origin-era">· ${esc(p.pastLifeEra)}</span></div>
+        </div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><span class="pcard-icon">♄</span><div class="pcard-title">${t('karmicWounds')}</div></div>
+        <div class="pcard-body">${esc(p.karmicWounds)}</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><span class="pcard-icon">☽</span><div class="pcard-title">${t('moonKarma')}</div></div>
+        <div class="pcard-body">${esc(p.moonKarma)}</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><span class="pcard-icon">∞</span><div class="pcard-title">${t('unfinished')} — ${L.Ketu} H${pl.ketu.house} ${pl.ketu.nameLoc}</div></div>
+        <div class="pcard-body">${esc(p.unfinishedAssignment)}</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><span class="pcard-icon">♄</span><div class="pcard-title">${t('saturnLesson')}</div></div>
+        <div class="pcard-body">${esc(p.saturnLesson)}</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><span class="pcard-icon">☊</span><div class="pcard-title">${t('evolution')} — ${L.Rahu} H${pl.rahu.house} ${pl.rahu.nameLoc}</div></div>
+        <div class="pcard-body">${esc(p.thisLifeEvolution)}</div>
+      </div>
+    </div>
+
+    <div class="achieve fade-in" style="animation-delay:.2s">
+      <div class="achieve-title">${t('howTo')}</div>
+      <div class="achieve-steps">
+        ${p.howToAchieve.map((s,i)=>`<div class="astep"><div class="astep-num">${i+1}</div><div class="astep-text"><strong>${esc(s.step)}</strong> — ${esc(s.description)}</div></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="btn-row fade-in" style="animation-delay:.24s">
+      <button class="btn-pdf" id="btnPdf" onclick="downloadPDF()">${t('downloadPdf')}</button>
+      <button class="btn-reset" onclick="resetApp()">${t('readAnother')}</button>
+    </div>`;
+
+  setTimeout(()=>{const f=document.getElementById('ageFill');if(f)f.style.width=p.soulAgePercent+'%';},500);
+}
+
+function hexToRgb(h){
+  h=(h||'#888').replace('#','');
+  if(h.length===3)h=h.split('').map(c=>c+c).join('');
+  const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);
+  if(isNaN(r)||isNaN(g)||isNaN(b)) return[136,136,136]; // invalid hex from AI → neutral grey
+  return[r,g,b];
+}
+
+// Cache for the embedded Cyrillic font (base64)
+let cyrillicFontB64=null;
+function arrayBufferToBase64(buf){
+  let binary='';
+  const bytes=new Uint8Array(buf);
+  const chunk=0x8000;
+  for(let i=0;i<bytes.length;i+=chunk){
+    binary+=String.fromCharCode.apply(null,bytes.subarray(i,i+chunk));
+  }
+  return btoa(binary);
+}
+async function ensureCyrillicFont(doc){
+  if(currentLang!=='ru') return false;
+  try{
+    if(!cyrillicFontB64){
+      // Stable TTF sources with full Cyrillic coverage (try in order)
+      // jsPDF requires TTF (not woff/woff2). Try stable TTF sources in order.
+      const urls=[
+        'https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf',
+        'https://cdn.jsdelivr.net/gh/dejavu-fonts/dejavu-fonts@version_2_37/ttf/DejaVuSans.ttf',
+        'https://raw.githubusercontent.com/google/fonts/main/apache/roboto/static/Roboto-Regular.ttf'
+      ];
+      let ok=false;
+      for(const u of urls){
+        try{
+          const resp=await fetch(u);
+          if(!resp.ok) continue;
+          const buf=await resp.arrayBuffer();
+          if(buf.byteLength<10000) continue; // sanity: a real TTF is far bigger
+          cyrillicFontB64=arrayBufferToBase64(buf);
+          ok=true;break;
+        }catch(_){ continue; }
+      }
+      if(!ok) return false;
+    }
+    doc.addFileToVFS('CyrFont.ttf',cyrillicFontB64);
+    doc.addFont('CyrFont.ttf','CyrFont','normal');
+    doc.addFont('CyrFont.ttf','CyrFont','bold');
+    return true;
+  }catch(e){
+    console.warn('Cyrillic font load failed; PDF falls back to Latin font:',e);
+    return false;
+  }
+}
+
+async function downloadPDF(){
+  if(!currentProfile||!window.jspdf) return;
+  const btn=document.getElementById('btnPdf');
+  btn.disabled=true;btn.textContent=t('generating');
+  try{
+    const{jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const useCyr=await ensureCyrillicFont(doc);
+    const FONT=useCyr?'CyrFont':'helvetica';
+    // helper to set font safely. CyrFont only has normal+bold registered;
+    // helvetica has normal/bold/italic. Map italic→normal for CyrFont.
+    const sf=(style)=>{
+      let s=style||'normal';
+      if(FONT==='CyrFont' && s==='italic') s='normal';
+      try{ doc.setFont(FONT,s); }
+      catch(_){ try{ doc.setFont(FONT,'normal'); }catch(__){ doc.setFont('helvetica','normal'); } }
+    };
+
+    const p=currentProfile,m=currentMeta,chart=currentChart;
+    const PDF=t('pdf');
+    const L=t('labels');
+    const W=210,mg=20,cw=170;
+    const BG=[26,20,16],GOLD=[201,169,110],PARCH=[245,237,216],MUTED=[139,115,85];
+    const addPage=()=>{doc.addPage();doc.setFillColor(...BG);doc.rect(0,0,W,297,'F');};
+    let y=18;
+    const ck=(n=14)=>{if(y+n>280){addPage();y=20;}};
+    doc.setFillColor(...BG);doc.rect(0,0,W,297,'F');
+    doc.setFontSize(7);sf('normal');doc.setTextColor(...MUTED);doc.text('AKASHIC RECORDS',W/2,y,{align:'center'});y+=5;
+    doc.setDrawColor(...GOLD);doc.setLineWidth(0.3);doc.line(mg,y,W-mg,y);y+=6;
+    doc.setFontSize(17);sf('bold');doc.setTextColor(...GOLD);doc.text(PDF.title,W/2,y,{align:'center'});y+=6;
+    doc.setDrawColor(...GOLD);doc.line(mg,y,W-mg,y);y+=7;
+    doc.setFontSize(7.5);sf('normal');doc.setTextColor(...MUTED);
+    const dn=m.name||t('seeker');
+    const locale=currentLang==='ru'?'ru-RU':'en-GB';
+    const dobFmt=new Date(m.dob).toLocaleDateString(locale,{day:'numeric',month:'long',year:'numeric'});
+    const tDispPdf=m.timeStr.startsWith('unknown')?'':`  ·  ${m.timeStr}`;
+    doc.text(`${dn}  ·  ${dobFmt}${tDispPdf}  ·  ${m.pob}`,W/2,y,{align:'center'});y+=8;
+    doc.setFontSize(10.5);sf('italic');doc.setTextColor(...PARCH);
+    doc.splitTextToSize(`"${p.soulMission}"`,cw).forEach(l=>{doc.text(l,W/2,y,{align:'center'});y+=5.5;});y+=3;
+    const rgb=hexToRgb(p.colorHex);
+    doc.setFillColor(...rgb);doc.circle(mg+3,y+2,3,'F');
+    doc.setFontSize(7);sf('bold');doc.setTextColor(...GOLD);doc.text(PDF.soulColour,mg+9,y);
+    sf('normal');doc.setTextColor(...PARCH);doc.setFontSize(9);doc.text(p.color,mg+9,y+5);
+    doc.setFontSize(7);doc.setTextColor(...MUTED);doc.splitTextToSize(p.colorMeaning,72).forEach((l,i)=>doc.text(l,mg+9,y+10+i*4));
+    const ex=W/2+5;
+    doc.setFontSize(7);sf('bold');doc.setTextColor(...GOLD);doc.text(PDF.element,ex,y);
+    sf('normal');doc.setTextColor(...PARCH);doc.setFontSize(9);doc.text(elementLoc(p.element),ex,y+5);
+    doc.setFontSize(7);doc.setTextColor(...MUTED);doc.splitTextToSize(p.elementDescription,72).forEach((l,i)=>doc.text(l,ex,y+10+i*4));
+    y+=24;
+    doc.setDrawColor(...GOLD);doc.setLineWidth(0.2);doc.line(mg,y,W-mg,y);y+=6;
+    doc.setFontSize(7);sf('bold');doc.setTextColor(...GOLD);doc.text(PDF.soulAge,mg,y);
+    sf('normal');doc.setTextColor(...PARCH);doc.setFontSize(10);doc.text(soulAgeLoc(p.soulAge),mg+34,y);
+    const bx=mg+72,bw=cw-72,bh=2.5;
+    doc.setFillColor(55,44,33);doc.roundedRect(bx,y-2.5,bw,bh,1,1,'F');
+    doc.setFillColor(...GOLD);doc.roundedRect(bx,y-2.5,bw*(p.soulAgePercent/100),bh,1,1,'F');
+    y+=6;doc.setFontSize(7);sf('italic');doc.setTextColor(...MUTED);doc.text(p.soulAgeDescription,mg,y);y+=8;
+    doc.setDrawColor(...GOLD);doc.setLineWidth(0.2);doc.line(mg,y,W-mg,y);y+=6;
+    doc.setFontSize(7);sf('bold');doc.setTextColor(...GOLD);doc.text(PDF.natal,mg,y);y+=5;
+    const pl=chart.pl;
+    const pcells=[[L.Sun,pl.sun.nameLoc,pl.sun.house],[L.Moon,pl.moon.nameLoc,pl.moon.house],
+      [L.Mercury,pl.mercury.nameLoc,pl.mercury.house],[L.Venus,pl.venus.nameLoc,pl.venus.house],
+      [L.Mars,pl.mars.nameLoc,pl.mars.house],[L.Jupiter,pl.jupiter.nameLoc,pl.jupiter.house],
+      [L.Saturn,pl.saturn.nameLoc,pl.saturn.house],[L.Ascendant,pl.ascendant.nameLoc,1],
+      [L.Ketu,pl.ketu.nameLoc,pl.ketu.house],[L.Rahu,pl.rahu.nameLoc,pl.rahu.house]];
+    const colW=cw/2-4;
+    pcells.forEach((c,i)=>{
+      const col=i%2,row=Math.floor(i/2);
+      const cx=mg+col*(colW+8),cy=y+row*6;
+      doc.setFontSize(7.5);sf('bold');doc.setTextColor(...GOLD);doc.text(c[0]+':',cx,cy);
+      sf('normal');doc.setTextColor(...PARCH);doc.text(`${c[1]} H${c[2]}`,cx+28,cy);
+    });
+    y+=Math.ceil(pcells.length/2)*6+4;
+    doc.setDrawColor(...GOLD);doc.setLineWidth(0.2);doc.line(mg,y,W-mg,y);y+=6;
+    const secs=[
+      {lbl:PDF.dominant,txt:`${p.dominantPlanet} — ${p.dominantPlanetInfluence}`},
+      {lbl:PDF.pastLife,txt:`${p.pastLifeArchetype} | ${p.pastLifeOccupation}\n${p.pastLifeDescription}\n${PDF.origin}: ${p.pastLifeCountry} · ${p.pastLifeEra}`},
+      {lbl:PDF.wounds,txt:p.karmicWounds},
+      {lbl:PDF.moon,txt:p.moonKarma},
+      {lbl:PDF.unfinished,txt:p.unfinishedAssignment},
+      {lbl:PDF.saturn,txt:p.saturnLesson},
+      {lbl:PDF.evolution,txt:p.thisLifeEvolution},
+    ];
+    for(const s of secs){
+      ck(20);
+      doc.setFontSize(7);sf('bold');doc.setTextColor(...GOLD);doc.text(s.lbl,mg,y);y+=5;
+      doc.setFontSize(9);sf('normal');doc.setTextColor(...PARCH);
+      s.txt.split('\n').forEach(line=>doc.splitTextToSize(line,cw).forEach(l=>{ck();doc.text(l,mg,y);y+=4.5;}));
+      y+=4;doc.setDrawColor(...GOLD);doc.setLineWidth(0.15);doc.line(mg,y,W-mg,y);y+=5;
+    }
+    ck(16);
+    doc.setFontSize(7);sf('bold');doc.setTextColor(...GOLD);doc.text(PDF.howTo,mg,y);y+=6;
+    p.howToAchieve.forEach((s,i)=>{
+      ck(12);
+      doc.setDrawColor(...GOLD);doc.setLineWidth(0.3);doc.circle(mg+3,y-1.5,2.5,'D');
+      doc.setFontSize(6.5);sf('normal');doc.setTextColor(...GOLD);doc.text(String(i+1),mg+3,y,{align:'center'});
+      doc.setFontSize(8.5);sf('bold');doc.setTextColor(...PARCH);
+      const sw=doc.getTextWidth(s.step+' — ');doc.text(s.step+' —',mg+9,y);
+      sf('normal');doc.setTextColor(MUTED[0]+40,MUTED[1]+40,MUTED[2]+40);
+      const dl=doc.splitTextToSize(s.description,cw-9-sw);
+      doc.text(dl[0],mg+9+sw,y);y+=5;
+      dl.slice(1).forEach(l=>{ck();doc.text(l,mg+9,y);y+=5;});y+=2;
+    });
+    y+=4;ck(8);
+    doc.setDrawColor(...GOLD);doc.setLineWidth(0.3);doc.line(mg,y,W-mg,y);y+=5;
+    doc.setFontSize(6);sf('italic');doc.setTextColor(...MUTED);
+    doc.text(t('pdfFooter'),W/2,y,{align:'center'});
+    doc.save((m.name?m.name.replace(/\s+/g,'_'):'Soul')+'_Karmic_Profile.pdf');
+  }catch(e){
+    console.error('PDF:',e);
+    alert((currentLang==='ru'?'Не удалось создать PDF: ':'Could not generate PDF: ')+e.message);
+  }
+  btn.disabled=false;btn.textContent=t('downloadPdf');
+}
+
+function resetApp(){
+  document.getElementById('resultSection').style.display='none';
+  document.getElementById('resultSection').innerHTML='';
+  document.getElementById('formSection').style.display='flex';
+  document.getElementById('errMsg').style.display='none';
+  currentProfile=null;currentMeta=null;currentChart=null;
+}
+</script>
+</body>
+</html>
